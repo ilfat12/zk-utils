@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Annotated, Literal
 
 from mcp.server.fastmcp import FastMCP
-from pydantic import Field
+from pydantic import Field, WithJsonSchema
 
 from zk_utils.application.notes import create_note as app_create_note
 from zk_utils.application.notes import (
@@ -81,7 +81,11 @@ def get_notes(
 
 @mcp.tool()
 def get_note_content(
-    path: Annotated[Path, Field(description="File path to the note")],
+    path: Annotated[
+        Path,
+        WithJsonSchema({"type": "string"}),
+        Field(description="File path to the note"),
+    ],
     headings: Annotated[
         list[str] | None,
         Field(description="List of h2 headings to extract (optional)"),
@@ -95,7 +99,11 @@ def get_note_content(
 
 @mcp.tool()
 def get_link_to_notes(
-    path: Annotated[Path, Field(description="File path to the source note")],
+    path: Annotated[
+        Path,
+        WithJsonSchema({"type": "string"}),
+        Field(description="File path to the source note"),
+    ],
     page: Annotated[int, Field(description="Page number (starting from 1)")] = 1,
     per_page: Annotated[int, Field(description="Number of notes per page")] = 10,
 ) -> app_get_link_to_notes.GetLinkToNotesOutput:
@@ -109,7 +117,11 @@ def get_link_to_notes(
 
 @mcp.tool()
 def get_linked_by_notes(
-    path: Annotated[Path, Field(description="File path to the target note")],
+    path: Annotated[
+        Path,
+        WithJsonSchema({"type": "string"}),
+        Field(description="File path to the target note"),
+    ],
     page: Annotated[int, Field(description="Page number (starting from 1)")] = 1,
     per_page: Annotated[int, Field(description="Number of notes per page")] = 10,
 ) -> app_get_linked_by_notes.GetLinkedByNotesOutput:
@@ -124,7 +136,11 @@ def get_linked_by_notes(
 
 @mcp.tool()
 def get_related_notes(
-    path: Annotated[Path, Field(description="File path to the note")],
+    path: Annotated[
+        Path,
+        WithJsonSchema({"type": "string"}),
+        Field(description="File path to the note"),
+    ],
     page: Annotated[int, Field(description="Page number (starting from 1)")] = 1,
     per_page: Annotated[int, Field(description="Number of notes per page")] = 10,
 ) -> app_get_related_notes.GetRelatedNotesOutput:
@@ -149,7 +165,9 @@ def get_tags() -> app_get_tags.GetTagsOutput:
 def create_note(
     title: Annotated[str, Field(description="Title of the new note")],
     path: Annotated[
-        Path, Field(description="File path where the note should be created")
+        Path,
+        WithJsonSchema({"type": "string"}),
+        Field(description="File path where the note should be created"),
     ],
 ) -> app_create_note.CreateNoteOutput:
     """Create a new zk note with the specified title and path."""
